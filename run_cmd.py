@@ -5,6 +5,8 @@
 =============
 """
 import argparse
+import datetime
+
 from self_test import check
 from subgraphs import delete_old
 from configparser import ConfigParser
@@ -44,7 +46,8 @@ if __name__ == '__main__':
     delete_old(label)
     logger.info("Done\n")
     logger.info("Delete old results in MySQL...")
-    conn.cursor().execute('delete from fuse_results')
+    now = datetime.datetime.now().strftime('%Y-%m-%d')
+    conn.cursor().execute("delete from fuse_results where period = '%s'" % now)
     conn.commit()
     conn.close()
     logger.info("Done\n")
