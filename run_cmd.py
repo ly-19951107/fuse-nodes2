@@ -61,11 +61,11 @@ if __name__ == '__main__':
     else:
         logger.info("Start to fuse subgraphs...")
         if processes == 1:
-            print("单进程融合")
+            logger.info("单进程融合")
             for i in range(len(root_results)):
                 fuse_and_create((label, root_results[i], i, len(root_results)))
         else:
-            print("多进程融合")
+            logger.info("多进程融合")
             raise NotSupportError("Fusing use multi processes is not supported for now.")
             # p = Pool(processes=processes)
             # for i in range(len(root_results)):

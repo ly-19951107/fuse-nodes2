@@ -27,18 +27,21 @@ def gen_logger(log_file_name, console_printing=False):
     log_file_name = path + '/' + log_file_name
 
     logger = logging.getLogger(log_file_name)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     if not logger.handlers:  # 避免重复添加handler
-        console = StreamHandler()
+        # console = StreamHandler()
         handler = RotFilHan(log_file_name, maxBytes=10 * 1024 * 1024, backupCount=5, encoding='utf-8')
         formatter = logging.Formatter(
             '%(process)d %(asctime)s %(levelname)7s %(filename)10s %(lineno)3d | %(message)s ',
             datefmt='%Y-%m-%d %H:%M:%S')
         handler.setFormatter(formatter)
-        console.setFormatter(formatter)
+        # console.setFormatter(formatter)
 
         logger.addHandler(handler)
         if console_printing:
-            logger.addHandler(console)  # 注释掉此行，以避免在控制台打印日志信息
+            console_handler = logging.StreamHandler()  # 输出到控制台
+            console_handler.setLevel(logging.INFO)  # info以上才输出到控制台
+            console_handler.setFormatter(formatter)
+            logger.addHandler(console_handler)  # 注释掉此行，以避免在控制台打印日志信息
 
     return logger

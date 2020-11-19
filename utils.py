@@ -63,10 +63,10 @@ def fuse_and_create(args):
     logger.info(f'''Process:{(cur + 1)}/{tot}''')
     children = fuse_other_nodes(1, res)
     sub_graph = {'val': res, 'children': children}
-    logger.info('  Save the fusion result to mysql...')
+    logger.debug('  Save the fusion result to mysql...')
     save_to_mysql(sub_graph)
-    logger.info('  Complete')
-    logger.info('  Create subgraph...')
+    logger.debug('  Complete')
+    logger.debug('  Create subgraph...')
     create_subgraph(label, sub_graph)
     logger.info('  Complete')
 
@@ -316,14 +316,13 @@ def compute_sim_and_combine(i, none_counts, cms_data=None, pms_data=None, gis_da
     computer = Computation(THRESHOLD)
     if none_counts == 1:
         if not cms_data:
-            logger.warning(f'''{('  ' * i)}Calculate the similarity 
-of two systems (pms, gis)''')
+            logger.info(f'''{('  ' * i)}Calculate the similarity of two systems (pms, gis)''')
             res = computer.compute(pms_data, gis_data)
-            logger.info(f'''{('  ' * i)}Complete''')
+            logger.debug(f'''{('  ' * i)}Complete''')
             if res is None:
-                logger.warning(f'''{('  ' * i)}No similar entities''')
+                logger.debug(f'''{('  ' * i)}No similar entities''')
                 return res
-            logger.info(f'''{('  ' * i)}Combined the entities'id...''')
+            logger.debug(f'''{('  ' * i)}Combined the entities'id...''')
             for i_ in res:
                 i_.insert(0, None)
                 if i_[1] is not None:
@@ -331,17 +330,17 @@ of two systems (pms, gis)''')
                 if i_[2] is not None:
                     i_[2] = gis_data[i_[2]]['id_']
 
-            logger.info(f'''{('  ' * i)}Complete''')
+            logger.debug(f'''{('  ' * i)}Complete''')
             return res
         if not pms_data:
-            logger.warning(f"{('  ' * i)}Calculate the similarity "
+            logger.debug(f"{('  ' * i)}Calculate the similarity "
                            f"of two systems (cms, gis)")
             res = computer.compute(cms_data, gis_data)
-            logger.info(f'''{('  ' * i)}Complete''')
+            logger.debug(f'''{('  ' * i)}Complete''')
             if res is None:
-                logger.warning(f'''{('  ' * i)}No similar entities''')
+                logger.debug(f'''{('  ' * i)}No similar entities''')
                 return res
-            logger.info(f'''{('  ' * i)}Combined the entities'id...''')
+            logger.debug(f'''{('  ' * i)}Combined the entities'id...''')
             for i_ in res:
                 i_.insert(1, None)
                 if i_[0] is not None:
@@ -349,15 +348,15 @@ of two systems (pms, gis)''')
                 if i_[2] is not None:
                     i_[2] = gis_data[i_[2]]['id_']
 
-            logger.info(f'''{('  ' * i)}Complete''')
+            logger.debug(f'''{('  ' * i)}Complete''')
             return res
-        logger.warning(f"{('  ' * i)}Calculate the similarity of two systems (cms, pms)")
+        logger.debug(f"{('  ' * i)}Calculate the similarity of two systems (cms, pms)")
         res = computer.compute(cms_data, pms_data)
-        logger.info(f'''{('  ' * i)}Complete''')
+        logger.debug(f'''{('  ' * i)}Complete''')
         if res is None:
-            logger.warning(f'''{('  ' * i)}No similar entities''')
+            logger.debug(f'''{('  ' * i)}No similar entities''')
             return res
-        logger.info(f'''{('  ' * i)}Combined the entities'id...''')
+        logger.debug(f'''{('  ' * i)}Combined the entities'id...''')
         for i_ in res:
             i_.insert(2, None)
             if i_[0] is not None:
@@ -365,10 +364,10 @@ of two systems (pms, gis)''')
             if i_[1] is not None:
                 i_[1] = pms_data[i_[1]]['id_']
 
-        logger.info('Complete')
+        logger.debug('Complete')
         return res
     elif none_counts == 2:
-        logger.warning(f'''{('  ' * i)}Only one system has data''')
+        logger.debug(f'''{('  ' * i)}Only one system has data''')
         res = []
         if cms_data is not None:
             for i in cms_data:
@@ -383,12 +382,12 @@ of two systems (pms, gis)''')
                 res.append([None, None, i['id_']])
 
         return res
-    logger.info(f'''{('  ' * i)}Start calculating similarity (three systems)...''')
+    logger.debug(f'''{('  ' * i)}Start calculating similarity (three systems)...''')
     res1 = computer.compute(cms_data, pms_data)
     res2 = computer.compute(cms_data, gis_data)
     res3 = computer.compute(pms_data, gis_data)
-    logger.info(f'''{('  ' * i)}Complete''')
-    logger.info(f'''{('  ' * i)}Combined the entities'id...''')
+    logger.debug(f'''{('  ' * i)}Complete''')
+    logger.debug(f'''{('  ' * i)}Combined the entities'id...''')
     res = []
     for j in res1:
         if j.count(None) == 0:
@@ -416,7 +415,7 @@ of two systems (pms, gis)''')
                             gis_id = gis_data[k[1]]['id_'] if k[1] is not None else None
                             res.append([cms_id, None, gis_id])
 
-    logger.info(f'''{('  ' * i)}Complete''')
+    logger.debug(f'''{('  ' * i)}Complete''')
     return res
 
 
